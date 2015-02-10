@@ -11,6 +11,7 @@ class Oper (object):
     def add_client(self, client):
         if client:
             self.clients.append(client)
+            self.channels.add_client(client)
             return True
         else:
             return False
@@ -20,3 +21,6 @@ class Oper (object):
 
     def get_clients(self):
         return self.clients 
+
+    def get_room(self):
+        return self.channels
