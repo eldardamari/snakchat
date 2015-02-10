@@ -24,3 +24,7 @@ class Oper (object):
 
     def get_room(self):
         return self.channels
+
+    def set_client_color(self,client,color):
+        if client in self.clients:
+            client.set_text_color(color)
