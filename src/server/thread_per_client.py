@@ -1,14 +1,24 @@
-class ThreadPerClientThread(threading.Thread):
+import threading, socket, select
 
-    CLIENTS_LIMIT = 10
-    RECV_BUFFER = 4096
+from oper import Oper
+from client import Client
+
+
+CLIENTS_LIMIT = 10
+RECV_BUFFER = 4096
+
+class ThreadPerClientThread (threading.Thread):
+
 
     def __init__(self,port):
+        print 'in init'
+        threading.Thread.__init__(self)
         self.port = port
         self.host = 'localhost'
         self.oper = Oper()
 
-    def __run__(self):
+    def run(self):
+        print "In Run.."
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((self.host, self.port))
@@ -19,16 +29,22 @@ class ThreadPerClientThread(threading.Thread):
         while True:
             rlist, wlist, xlist = select.select([server_socket],[],[],0)
 
-            if ready_to_read:
+            if rlist:
 
                     socket_fd, addr = server_socket.accept()
                     username = socket_fd.recv(RECV_BUFFER)
 
-                    if len(self.oper.clients) < CLIENTS_LIMIT:
-                        self.oper.clients.append(Client(server_socket,\
-                                                    socket_fd,   \
-                                                    self.oper,   \
-                                                    username))
+                    if self.oper.num_of_clients() < CLIENTS_LIMIT:
+                        
+                        new_client = Client(server_socket,\
+                                            socket_fd,   \
+                                            self.oper,   \
+                                            username)
+                        # add new user to active users
+                        self.oper.add_client(new_client)
+                        #start user thread
+                        new_client.start()
+
                         print "Client <%s> is connected" % username
                     else:
                         socket_fd.send("Error - Snakchat room is full")
