@@ -33,7 +33,7 @@ class Protocol (object):
         response = ""
 
         if cmd == "MEMBERS":
-            response = self.oper.get_clients()
+            response = "Active Users: "+"/".join(self.oper.get_usernames())
         elif cmd == "COLOR":
             if len(splited) >= 2:
                 if splited[1] in colors:
