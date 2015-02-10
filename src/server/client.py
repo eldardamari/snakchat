@@ -1,4 +1,6 @@
-import threading
+import threading, socket, select
+
+RECV_BUFFER = 4096
 
 class Client (threading.Thread):
 
@@ -15,6 +17,17 @@ class Client (threading.Thread):
 
     def run(self):
         print self.username, " is active"
+        while True:
+            rlist, wlist, xlist = select.select([self.socket_fd],[],[],0)
+
+            if rlist:
+                # lets firsts send every message
+                msg = self.socket_fd.recv(RECV_BUFFER)
+                self.oper.get_room().send_all(self.username,msg)
 
     def get_username(self):
         return self.username
+
+    def send_msg(self,username,msg):
+        message = "<{name}>: {say}".format(name=username, say=msg)
+        self.socket_fd.send(message)
