@@ -21,6 +21,12 @@ class Oper (object):
 
     def get_clients(self):
         return self.clients 
+    
+    def get_usernames(self):
+        names = []
+        for client_it in self.clients:
+            names.append(client_it.get_username())
+        return names
 
     def get_room(self):
         return self.channels
