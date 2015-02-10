@@ -1,6 +1,8 @@
 import sys, getopt
 
-port = '8888'
+from thread_per_client import ThreadPerClientThread
+
+port = 8888
 
 def main(argv):
     """
@@ -19,7 +21,7 @@ def main(argv):
            print 'server.py -p <port>'
            sys.exit()
        elif opt in ("-p", "--port"):
-           port = arg
+           port = int(arg)
 
     print port
 
@@ -27,4 +29,5 @@ if __name__ == "__main__":
     main(sys.argv[1:])
 
     """ Run Thread Per Client Service """
-        ThreadPerClientThread(port)
+    server = ThreadPerClientThread(port)
+    server.start()
