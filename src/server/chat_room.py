@@ -26,13 +26,18 @@ class ChatRoom (object):
     def send_all(self,username,msg):
         self.lock.acquire()
 
-        sender = self.get_client(username)
+        if username:
+            sender = self.get_client(username)
 
         for client_it in self.clients:         
-            if client_it.get_username() == username:
-                continue
+            if username:
+                if client_it.get_username() == username:
+                    continue
+                else:
+                    client_it.send_msg(sender.put_color("<"+sender.get_username()+"> ")+sender.put_color(msg))
             else:
-                client_it.send_msg(sender.put_color("<"+sender.get_username()+"> ")+sender.put_color(msg))
+                # system notice
+                client_it.send_msg(msg)
         self.lock.release()
 
     def color_msg(self,username,msg):
