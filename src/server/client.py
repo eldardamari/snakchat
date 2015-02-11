@@ -1,6 +1,7 @@
-import threading, select
-from socket import error as SocketError
+import threading,thread,  select, socket, sys
+sys.path.append("..")
 
+import utils.utilities as Utils
 from protocol import Protocol
 
 RECV_BUFFER = 4096
@@ -17,18 +18,22 @@ class Client (threading.Thread):
         self.oper = oper
         self.username = username
         self.protocol = Protocol(oper)
-        self.text_color = "\033[97m"
+        self.text_color = Utils.colors["white"]
         self.beep = "\a"
 
     def run(self):
-        print "<{username}>: is active".format(username=self.username)
-        while True:
-            rlist, wlist, xlist = select.select([self.socket_fd],[],[],0) 
-            if rlist:
-                # lets firsts send every message
-                msg = self.socket_fd.recv(RECV_BUFFER).rstrip()
-                if msg:
-                    self.protocol.process_message(msg,self)
+        self.oper.user_join_msg(self.username)
+        try:
+            while True:
+                rlist, wlist, xlist = select.select([self.socket_fd],[],[],0) 
+                if rlist:
+                    # lets firsts send every message
+                    msg = self.socket_fd.recv(RECV_BUFFER).rstrip()
+                    if msg:
+                        self.protocol.process_message(msg,self)
+        except socket.error, e:
+            print "<{username}> Disconnected - Connection error: {msg}".format(username=self.username,msg=e)
+            self.oper.remove_client(self)
 
     def get_username(self):
         return self.username
@@ -53,3 +58,9 @@ class Client (threading.Thread):
     def set_beep(self, status):
         self.beep = "\a" if status else ""
 
+    def commit_suicide(self):
+        self.oper.remove_client(self)
+        self.socket_fd.close()
+        self.oper.user_left_msg(self.get_username())
+        print "Client <name> is connected".format(name=self.username)
+        thread.exit()
