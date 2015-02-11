@@ -31,7 +31,8 @@ class Protocol (object):
             - COLOR <color> - Changing text color, colors: {colors}
             - MEMBERS       - Prints all active users.
             - BEEP <status> - Activate beep sound for incoming messages, status: ON / OFF
-            - PRIVATE <username> <msg> - Send private messages to other users.""".format(colors=Utils.colors.keys()))
+            - PRIVATE <username> <msg> - Send private messages to other users
+            - EXIT          - Quit chat.""".format(colors=Utils.colors.keys()))
 
         elif cmd == "MEMBERS":
            return "Active Users: "+"/".join(self.oper.get_usernames())
