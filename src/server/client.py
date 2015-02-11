@@ -1,4 +1,5 @@
-import threading, socket, select
+import threading, select
+from socket import error as SocketError
 
 from protocol import Protocol
 
@@ -10,7 +11,6 @@ class Client (threading.Thread):
                         socket_fd,\
                         oper,\
                         username):
-        print username, " created"
         threading.Thread.__init__(self)
         self.server_socket = server_socket
         self.socket_fd = socket_fd
@@ -18,9 +18,10 @@ class Client (threading.Thread):
         self.username = username
         self.protocol = Protocol(oper)
         self.text_color = "\033[97m"
+        self.beep = "\a"
 
     def run(self):
-        print self.username, " is active"
+        print "<{username}>: is active".format(username=self.username)
         while True:
             rlist, wlist, xlist = select.select([self.socket_fd],[],[],0)
 
@@ -34,14 +35,22 @@ class Client (threading.Thread):
         return self.username
 
     def send_msg(self,username,msg):
-        self.socket_fd.send(msg)
+        try:
+            self.socket_fd.send(self.beep+msg)
+        except:
+            self.oper.remove_client(self)
+            self.socket_fd.close()
+
 
     def set_text_color(self,color):
         self.text_color = color
 
     def put_color(self,msg):
         return "{color_begin}<{name}> {say}{color_end}\n".\
-                    format( name=self.username,              \
+                    format( name=self.username,         \
                             color_begin=self.text_color,\
                             say=msg,                    \
                             color_end="\033[0m")
+    def set_beep(self, status):
+        self.beep = "\a" if status else ""
+

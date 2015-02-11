@@ -24,23 +24,26 @@ class Protocol (object):
         return msg.split(" ",1)
 
     def is_command(self,cmd):
-        commands = ["COLOR","MEMBERS"]
+        commands = ["COLOR","MEMBERS","BEEP"]
         return cmd in commands 
 
     def get_command_results(self,splited,client):
         cmd = splited[0]
         global colors
-        response = ""
 
         if cmd == "MEMBERS":
-            response = "Active Users: "+"/".join(self.oper.get_usernames())
+           return "Active Users: "+"/".join(self.oper.get_usernames())
+
         elif cmd == "COLOR":
-            if len(splited) >= 2:
+            if len(splited) == 2:
                 if splited[1] in colors:
                     self.oper.set_client_color(client,colors[splited[1]])
-                    response = "** Color changed succssefully to {color} **".format(color=splited[1])
-                else:
-                    response = "** Error changing your color, please choose between {colors} **".format(colors=colors.keys())
-            else:
-                    response = "** Error changing your color, please choose between {colors} **".format(colors=colors.keys())
-        return response
+                    return "** Color changed succssefully to {color} **".format(color=splited[1])
+            return "** Error changing your color, please choose between {colors} **".format(colors=colors.keys())
+        elif cmd == "BEEP":
+            if len(splited) == 2:
+                if splited[1] in ["ON","OFF"]:
+                    self.oper.set_client_beep(client,splited[1])
+                    return "**  changed succssefully to {status} **".format(status=splited[1])
+            return "** Error changing your color, please choose between {options} **".format(options=["ON","OFF"])
+

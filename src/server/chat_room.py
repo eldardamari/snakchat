@@ -12,11 +12,10 @@ class ChatRoom (object):
         self.clients.append(client)
 
     def remove_client(self,client):
-            for client_it in self.clients:
-                if client_it.get_username() == client.get_username :
-                    self.clients.remove(client_it)
-                    return True
-            return False
+        if client in self.clients:
+            self.clients.remove(client)
+            return True
+        return False
 
     def send_private_msg(self,username,msg):
         self.lock.acquire()

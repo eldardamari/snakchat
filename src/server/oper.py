@@ -3,7 +3,6 @@ from chat_room import ChatRoom
 class Oper (object):
 
     def __init__(self):
-        print 'in oper'
         self.clients = []
         self.channels = ChatRoom("Master")
 
@@ -15,6 +14,13 @@ class Oper (object):
             return True
         else:
             return False
+
+    def remove_client(self,client):
+        if client in self.clients:
+            self.clients.remove(client)
+            self.channels.remove_client(client)
+            return True
+        return False
 
     def num_of_clients(self):
         return len(self.clients)
@@ -34,3 +40,8 @@ class Oper (object):
     def set_client_color(self,client,color):
         if client in self.clients:
             client.set_text_color(color)
+    
+    def set_client_beep(self,client,status):
+        status = True if status == "ON" else False
+        if client in self.clients:
+            client.set_beep(status)
