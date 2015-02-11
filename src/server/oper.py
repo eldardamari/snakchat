@@ -1,4 +1,7 @@
+import sys
+sys.path.append("..")
 from chat_room import ChatRoom
+import utils.utilities as Utils
 
 class Oper (object):
 
@@ -45,3 +48,12 @@ class Oper (object):
         status = True if status == "ON" else False
         if client in self.clients:
             client.set_beep(status)
+    def kill_client(self,client):
+        if client:
+            client.commit_suicide()
+    
+    def user_join_msg(self,username):
+        self.channels.send_all("",Utils.color_system_msg("<"+username+"> joined the room")) 
+
+    def user_left_msg(self,username):
+        self.channels.send_all("",Utils.color_system_msg("<"+username+"> left the room")) 
