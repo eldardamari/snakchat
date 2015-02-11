@@ -60,5 +60,7 @@ class Oper (object):
 
     def username_exists(self,username):
         for client_it in self.clients:
-            return True if client_it.get_username() == username else False
+            if client_it.get_username() == username:
+                return True
+        return False
 

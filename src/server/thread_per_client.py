@@ -1,11 +1,9 @@
-import threading, socket, select
+import threading, socket, select, sys
+sys.path.append("..")
+import utils.utilities as Utils
 
 from oper import Oper
 from client import Client
-
-
-CLIENTS_LIMIT = 10
-RECV_BUFFER = 4096
 
 class ThreadPerClientThread (threading.Thread):
 
@@ -19,7 +17,7 @@ class ThreadPerClientThread (threading.Thread):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((self.host, self.port))
-        server_socket.listen(10)
+        server_socket.listen(Utils.CLIENTS_LIMIT)
 
         print "Snakchat Server is Listening..."
 
@@ -28,14 +26,13 @@ class ThreadPerClientThread (threading.Thread):
 
             if rlist:
                     socket_fd, addr = server_socket.accept()
-                    username = socket_fd.recv(RECV_BUFFER)
+                    username = socket_fd.recv(Utils.RECV_BUFFER)
                     if self.oper.username_exists(username):
                         socket_fd.send("Error - Username already exist!")
                         socket_fd.close()
                         continue
 
-
-                    if self.oper.num_of_clients() < CLIENTS_LIMIT:
+                    if self.oper.num_of_clients() < Utils.CLIENTS_LIMIT:
                         
                         new_client = Client(server_socket,\
                                             socket_fd,   \
@@ -46,7 +43,7 @@ class ThreadPerClientThread (threading.Thread):
                         #start user thread
                         new_client.start()
 
-                        print "Client <{name}> is connected".format(name=username)
+                        print Utils.color_sucess_msg("Client <{name}> connected".format(name=username))
                     else:
                         socket_fd.send("Error - Snakchat room is full")
                         socket_fd.close()
