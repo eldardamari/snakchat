@@ -11,14 +11,12 @@ class ThreadPerClientThread (threading.Thread):
 
 
     def __init__(self,port):
-        print 'in init'
         threading.Thread.__init__(self)
         self.port = port
         self.host = 'localhost'
         self.oper = Oper()
 
     def run(self):
-        print "In Run.."
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((self.host, self.port))
@@ -30,7 +28,6 @@ class ThreadPerClientThread (threading.Thread):
             rlist, wlist, xlist = select.select([server_socket],[],[],0)
 
             if rlist:
-
                     socket_fd, addr = server_socket.accept()
                     username = socket_fd.recv(RECV_BUFFER)
 

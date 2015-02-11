@@ -23,8 +23,6 @@ def main(argv):
        elif opt in ("-p", "--port"):
            port = int(arg)
 
-    print port
-
 if __name__ == "__main__":
     main(sys.argv[1:])
 
