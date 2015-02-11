@@ -5,7 +5,7 @@ Intro
 -----
 * Language: Python.
 
-Compiling
+Let's Chat!
 ---------
 * clone this project.
 * server side:
