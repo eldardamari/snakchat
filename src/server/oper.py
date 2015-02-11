@@ -57,3 +57,8 @@ class Oper (object):
 
     def user_left_msg(self,username):
         self.channels.send_all("",Utils.color_system_msg("<"+username+"> left the room")) 
+
+    def username_exists(self,username):
+        for client_it in self.clients:
+            return True if client_it.get_username() == username else False
+

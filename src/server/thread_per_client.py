@@ -29,6 +29,11 @@ class ThreadPerClientThread (threading.Thread):
             if rlist:
                     socket_fd, addr = server_socket.accept()
                     username = socket_fd.recv(RECV_BUFFER)
+                    if self.oper.username_exists(username):
+                        socket_fd.send("Error - Username already exist!")
+                        socket_fd.close()
+                        continue
+
 
                     if self.oper.num_of_clients() < CLIENTS_LIMIT:
                         
