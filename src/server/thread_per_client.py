@@ -9,7 +9,6 @@ RECV_BUFFER = 4096
 
 class ThreadPerClientThread (threading.Thread):
 
-
     def __init__(self,port):
         threading.Thread.__init__(self)
         self.port = port
@@ -42,7 +41,7 @@ class ThreadPerClientThread (threading.Thread):
                         #start user thread
                         new_client.start()
 
-                        print "Client <%s> is connected" % username
+                        print "Client <{name}> is connected".format(name=username)
                     else:
                         socket_fd.send("Error - Snakchat room is full")
                         socket_fd.close()
