@@ -23,8 +23,7 @@ class Client (threading.Thread):
     def run(self):
         print "<{username}>: is active".format(username=self.username)
         while True:
-            rlist, wlist, xlist = select.select([self.socket_fd],[],[],0)
-
+            rlist, wlist, xlist = select.select([self.socket_fd],[],[],0) 
             if rlist:
                 # lets firsts send every message
                 msg = self.socket_fd.recv(RECV_BUFFER).rstrip()
@@ -34,9 +33,9 @@ class Client (threading.Thread):
     def get_username(self):
         return self.username
 
-    def send_msg(self,username,msg):
+    def send_msg(self,msg):
         try:
-            self.socket_fd.send(self.beep+msg)
+            self.socket_fd.send(self.beep+msg+"\n")
         except:
             self.oper.remove_client(self)
             self.socket_fd.close()
@@ -46,11 +45,11 @@ class Client (threading.Thread):
         self.text_color = color
 
     def put_color(self,msg):
-        return "{color_begin}<{name}> {say}{color_end}\n".\
-                    format( name=self.username,         \
-                            color_begin=self.text_color,\
+        return "{color_begin}{say}{color_end}".\
+                    format( color_begin=self.text_color,\
                             say=msg,                    \
                             color_end="\033[0m")
+
     def set_beep(self, status):
         self.beep = "\a" if status else ""
 
