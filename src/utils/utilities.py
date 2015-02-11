@@ -24,5 +24,5 @@ def color_warning_msg(msg):
 def color_sucess_msg(msg):
     return colors["green"] + msg + ENDC
 
-def bold_text(msg):
-    return BOLD + msg + ENDC
+def bold_underline_text(msg):
+    return BOLD + UNDERLINE + msg + ENDC
