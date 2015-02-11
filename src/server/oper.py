@@ -63,4 +63,3 @@ class Oper (object):
             if client_it.get_username() == username:
                 return True
         return False
-
