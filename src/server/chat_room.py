@@ -26,7 +26,10 @@ class ChatRoom (object):
         self.lock.acquire()
 
         for client_it in self.clients:         
-            client_it.send_msg(username,self.color_msg(username,msg))
+            if client_it.get_username() == username:
+                continue
+            else:
+                client_it.send_msg(username,self.color_msg(username,msg))
 
         self.lock.release()
 
