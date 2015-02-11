@@ -4,8 +4,6 @@ sys.path.append("..")
 import utils.utilities as Utils
 from protocol import Protocol
 
-RECV_BUFFER = 4096
-
 class Client (threading.Thread):
 
     def __init__(self,  server_socket,\
@@ -28,7 +26,7 @@ class Client (threading.Thread):
                 rlist, wlist, xlist = select.select([self.socket_fd],[],[],0) 
                 if rlist:
                     # lets firsts send every message
-                    msg = self.socket_fd.recv(RECV_BUFFER).rstrip()
+                    msg = self.socket_fd.recv(Utils.RECV_BUFFER).rstrip()
                     if msg:
                         self.protocol.process_message(msg,self)
         except socket.error, e:
@@ -53,7 +51,7 @@ class Client (threading.Thread):
         return "{color_begin}{say}{color_end}".\
                     format( color_begin=self.text_color,\
                             say=msg,                    \
-                            color_end="\033[0m")
+                            color_end=Utils.ENDC)
 
     def set_beep(self, status):
         self.beep = "\a" if status else ""
@@ -62,5 +60,5 @@ class Client (threading.Thread):
         self.oper.remove_client(self)
         self.socket_fd.close()
         self.oper.user_left_msg(self.get_username())
-        print "Client <name> is connected".format(name=self.username)
+        print Utils.color_warning_msg("Client <{name}> disconnected".format(name=self.username))
         thread.exit()
