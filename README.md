@@ -1,4 +1,4 @@
-Snakchat Python Multi-Thread Chat Room
+Snakchat - Python Multi-Thread Chat Room
 =====
 
 Intro
@@ -9,7 +9,8 @@ Let's Chat!
 ---------
 * clone this project.
 * server side:
-  * ```python server.py```
+  * ```python server.py -p/--port <port>```
+  * default port = 8888
 * client side:
   * ```python client.py username host port```
   * host = 'localhost'
