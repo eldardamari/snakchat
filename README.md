@@ -12,7 +12,7 @@ Let's Chat!
   * ```python server.py -p/--port <port>```
   * default port = 8888
 * client side:
-  * ```python client.py username host port```
+  * ```python client.py <username> <host> <port>```
   * host = 'localhost'
   * oprt = 8888
 
